@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>The Movie Data Base - Demo</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet"> 
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+      <header>
+
+      </header>
+
+      <input type="text" id="myText" value="Some text...">
+
+      <button onclick="myFunction()">Try it</button>
+      <p id="demo"></p>
+      <p id="url"></p>
+
+      <section>
+
+      </section>
+
+    <script>
+    var header = document.querySelector('header');
+    var section = document.querySelector('section');
+    var requestURL = 'http://api.themoviedb.org/3/search/movie?query=arma%20mortal&language=es-US&api_key=7c5105894b0446bb59b01a30cf235f3b';
+    var request = new XMLHttpRequest();
+    
+    
+    
+    function myFunction() {
+      var x = document.getElementById("myText").value;
+      document.getElementById("demo").innerHTML = x;
+      requestURL= 'http://api.themoviedb.org/3/search/movie?query=' + x + '&language=es-US&api_key=7c5105894b0446bb59b01a30cf235f3b';
+      document.getElementById("url").innerHTML = requestURL;
+      request.open('GET', requestURL);
+      request.responseType = 'json';
+      request.send();
+      var movies = request.response;
+      request.onload = function() {
+        var movies = request.response;
+        populateHeader(movies);
+        showMovies(movies);
+        }
+      }
+    /*request.onload = function() {
+        var movies = request.response;
+        populateHeader(movies);
+        showMovies(movies);
+    };*/
+
+    function populateHeader(jsonObj) {
+        var myH1 = document.createElement('h1');
+        myH1.textContent = jsonObj['results'][0]['title'];
+        header.appendChild(myH1);
+
+        var myPara = document.createElement('p');
+        myPara.textContent = 'resumen: ' + jsonObj['results'][0]['overview'] + ' // Año: ' + jsonObj['results'][0]['release_date'];
+        header.appendChild(myPara);
+    };
+
+    function showMovies(jsonObj) {
+      var movies = jsonObj['results'];
+          
+      for (var i = 0; i < movies.length; i++) {
+        var myArticle = document.createElement('article');
+        var myH2 = document.createElement('h2');
+        var myPara1 = document.createElement('p');
+        var myPara2 = document.createElement('p');
+        var myPara3 = document.createElement('p');
+        var myList = document.createElement('ul');
+        var myPara4 = document.createElement('IMG');
+
+        myH2.textContent = movies[i].title;
+        myPara1.textContent = 'resumen: ' + movies[i].overview;
+        myPara2.textContent = 'año: ' + movies[i].release_date;
+        myPara4.setAttribute("src", 'https://image.tmdb.org/t/p/original' + movies[i].poster_path);
+        myPara4.setAttribute("width", "250");
+        myPara4.setAttribute("height", "250");
+        /*myPara3.textContent = 'Superpowers:';
+            
+        var superPowers = movies[i].powers;
+        for (var j = 0; j < superPowers.length; j++) {
+          var listItem = document.createElement('li');
+          listItem.textContent = superPowers[j];
+          myList.appendChild(listItem);
+          }*/
+
+        myArticle.appendChild(myH2);
+        myArticle.appendChild(myPara1);
+        myArticle.appendChild(myPara2);
+        //myArticle.appendChild(myPara3);
+        myArticle.appendChild(myList);
+        myArticle.appendChild(myPara4);
+
+        section.appendChild(myArticle);
+        }
+      }
+    
+    </script>
+  </body>
+</html>
